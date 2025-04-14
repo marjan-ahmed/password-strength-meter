@@ -3,6 +3,7 @@ import random
 import string
 import re
 import time 
+import clipboard
 
 st.set_page_config("Password strength Meter", "🛠")
 st.title("🔐 Password Strength Meter & Generator")
@@ -38,7 +39,6 @@ def is_password_sharp(password: str):
 
 
 def generate_password():
-    
     numbers = random.randint(100, 900)
     char_list = [random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(8)]  
     char_string = ''.join(char_list)
@@ -51,7 +51,10 @@ generate_pass = st.button("Generate Password")
 
 if generate_pass:
     generated_password = generate_password()
-    st.write(f"🔑 Generated Password: {generated_password}")
+    st.write("🔑 Generated Password:", generated_password)
+    st.button("📋 Copy to Clipboard", key="copy")
+    clipboard.copy(generated_password)
+  
 
     st.subheader("Password Scoring:")
     score = is_password_sharp(generated_password)
