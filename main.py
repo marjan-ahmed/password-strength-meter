@@ -2,8 +2,7 @@ import streamlit as st
 import random
 import string
 import re
-import time 
-import clipboard
+import time
 
 st.set_page_config("Password strength Meter", "🛠")
 st.title("🔐 Password Strength Meter & Generator")
@@ -29,36 +28,32 @@ def is_password_sharp(password: str):
     else:
         st.write("❌ Add at least one number (0-9).")
 
-    if re.search(r"[!@#$%^&/,)=+-~`.\*}|]", password):
+    if re.search(r"[!@#$%^&/,)=+\-~`.*}|]", password):
         score += 25
         st.write("✅ Contains special characters (!@#$%^)")
     else:
-        st.write("❌ Include at least one special character ((!@#$%^)")
-
+        st.write("❌ Include at least one special character (!@#$%^)")
+    
     return score
-
 
 def generate_password():
     numbers = random.randint(100, 900)
-    char_list = [random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(8)]  
+    char_list = [random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(8)]
     char_string = ''.join(char_list)
     symbol_list = random.choices(string.punctuation)
-    symbols = ''.join(symbol_list) 
-    passd = char_string + str(numbers) + symbols  
-
+    symbols = ''.join(symbol_list)
+    passd = char_string + str(numbers) + symbols
     return passd
+
 generate_pass = st.button("Generate Password")
 
 if generate_pass:
     generated_password = generate_password()
-    st.write("🔑 Generated Password:", generated_password)
-    st.button("📋 Copy to Clipboard", key="copy")
-    clipboard.copy(generated_password)
-  
+    st.success("🔑 Generated Password:")
+    st.code(generated_password, language="text")
 
     st.subheader("Password Scoring:")
     score = is_password_sharp(generated_password)
-
     st.progress(score / 100)
 
     if score == 100:
@@ -70,13 +65,12 @@ if generate_pass:
     else:
         st.error("❌ Weak Password. Please improve it.")
 
-st.subheader("Check Your Own Password Strength")
+st.subheader("🔍 Check Your Own Password Strength")
 input_password = st.text_input("Enter your password:", type="password")
 
 if input_password:
     st.subheader("Your Password Scoring:")
     score = is_password_sharp(input_password)
-
     st.progress(score / 100)
 
     if score == 100:
@@ -88,4 +82,9 @@ if input_password:
     else:
         st.error("❌ Weak Password. Please improve it.")
 
-st.markdown(f"<h6 style='text-align: center; color: black;'>© {time.strftime} 2025 Mohammad Marjan Ahmed. All rights reserved.</h6>", unsafe_allow_html=True)
+# Updated footer with current year
+year = time.strftime("%Y")
+st.markdown(
+    f"<h6 style='text-align: center; color: gray;'>© {year} Mohammad Marjan Ahmed. All rights reserved.</h6>",
+    unsafe_allow_html=True
+)
